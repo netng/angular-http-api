@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpEvent, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../interfaces/user';
 import { environment } from 'src/environments/environment.development';
@@ -39,5 +39,9 @@ export class UserService {
 
   upladoFile(file: FormData): Observable<HttpEvent<string>> {
     return this.http.post<any>(`http://localhost:3000/report/income/local`, file, { observe: 'events', reportProgress: true })
+  }
+
+  getTextFile(): Observable<string> {
+    return this.http.get('./assets/text.txt', {responseType: 'text'});
   }
 }

@@ -39,11 +39,12 @@ export class AppComponent implements OnInit {
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
-    this.onGetUsers();
+    // this.onGetUsers();
     // this.onGetUser();
     // this.onCreateUser();
     // this.onUpdateUser();
     // this.onDeleteUser();
+    this.onGetTextFile();
   }
 
   onGetUsers(): void {
@@ -140,8 +141,20 @@ export class AppComponent implements OnInit {
         console.log('something goes wrong ', error);
       }),
       complete: () => console.log('uploading done')
-
     })
 
+  }
+
+  onGetTextFile(): void {
+    this.userService.getTextFile().subscribe({
+      next: (response) => {
+        console.log(response);
+      },
+      error: (error) => {
+        console.log(error);
+
+      },
+      complete: () => console.log('Getting text file done')
+    });
   }
 }
