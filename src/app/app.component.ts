@@ -37,12 +37,13 @@ export class AppComponent implements OnInit {
 
   fileStatus = { status: '', percentage: 0 };
   users: User[] = [];
+  private imageUrl = 'https://robohash.org';
 
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
     this.onGetUsers();
-    // this.onGetUser();
+    this.onGetUser();
     // this.onCreateUser();
     // this.onUpdateUser();
     // this.onDeleteUser();
@@ -56,13 +57,14 @@ export class AppComponent implements OnInit {
           (users) => console.log('from tap operator', users)
         ),
         map((users) => {
-          return users.map((user: User) => ({
+          return users.map((user) => ({
             name: user.name.toUpperCase(),
             username: user.username,
             email: user.email,
             phone: user.phone,
             website: user.website,
-            is_admin: user.id === 10 ? 'Admin' : 'User'
+            is_admin: user.id === 10 ? 'Admin' : 'User',
+            image: `${this.imageUrl}/${user.username}`
           }))
         })
     ).subscribe({
@@ -97,7 +99,16 @@ export class AppComponent implements OnInit {
   // }
 
   onGetUser(): void {
-    this.userService.getUser().subscribe({
+    this.userService.getUser()
+    .pipe(
+      map((user) => {
+        return ({
+          ...user,
+          search_key: [user.username, user.id]
+        })
+      })
+    )
+    .subscribe({
       next: ((response: User) => {
         console.log(response);
       }),
