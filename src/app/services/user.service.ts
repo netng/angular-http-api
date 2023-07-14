@@ -12,12 +12,19 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  getUsers(): Observable<HttpEvent<User[]>> {
+  getUsers(): Observable<User[]> {
     let myParams = new HttpParams({fromObject: {['list']: ['list1', 'list2']} });
     myParams = myParams.append('name', 'fus')
     return this.http.get<User[]>(`${this.apiUrl}/users`,
-    { observe: 'events', reportProgress: true });
+    { observe: 'body' });
   }
+
+  // getUsers(): Observable<HttpEvent<User[]>> {
+  //   let myParams = new HttpParams({fromObject: {['list']: ['list1', 'list2']} });
+  //   myParams = myParams.append('name', 'fus')
+  //   return this.http.get<User[]>(`${this.apiUrl}/users`,
+  //   { observe: 'events', reportProgress: true });
+  // }
 
   getUser(): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/users/1`);

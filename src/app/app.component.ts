@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from './services/user.service';
 import { User } from './interfaces/user';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
+import { map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -35,22 +36,39 @@ export class AppComponent implements OnInit {
   };
 
   fileStatus = { status: '', percentage: 0 };
+  users: User[] = [];
 
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
-    // this.onGetUsers();
+    this.onGetUsers();
     // this.onGetUser();
     // this.onCreateUser();
     // this.onUpdateUser();
     // this.onDeleteUser();
-    this.onGetTextFile();
+    // this.onGetTextFile();
   }
 
   onGetUsers(): void {
-    this.userService.getUsers().subscribe({
-      next: ((response: HttpEvent<User[]>) => {
+    this.userService.getUsers()
+      .pipe(
+        tap(
+          (users) => console.log('from tap operator', users)
+        ),
+        map((users) => {
+          return users.map((user: User) => ({
+            name: user.name.toUpperCase(),
+            username: user.username,
+            email: user.email,
+            phone: user.phone,
+            website: user.website,
+            is_admin: user.id === 10 ? 'Admin' : 'User'
+          }))
+        })
+    ).subscribe({
+      next: ((response: User[]) =>  {
         console.log(response);
+        this.users = response;
       }),
       error: ((error: any) => {
         console.log(error);
@@ -60,6 +78,23 @@ export class AppComponent implements OnInit {
       }
     })
   }
+
+  // onGetUsers(): void {
+  //   this.userService.getUsers().pipe(
+  //     tap(
+  //       user => console.log('from tapi', user)
+  //     )).subscribe({
+  //     next: ((response: HttpEvent<User[]>) => {
+  //       console.log(response);
+  //     }),
+  //     error: ((error: any) => {
+  //       console.log(error);
+  //     }),
+  //     complete: () => {
+  //       console.log('Getting users done');
+  //     }
+  //   })
+  // }
 
   onGetUser(): void {
     this.userService.getUser().subscribe({
