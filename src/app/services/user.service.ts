@@ -15,7 +15,7 @@ export class UserService {
   getUsers(): Observable<User[]> {
     let myParams = new HttpParams({fromObject: {['list']: ['list1', 'list2']} });
     myParams = myParams.append('name', 'fus')
-    return this.http.get<User[]>(`${this.apiUrl}/usersdsfdsfd `)
+    return this.http.get<User[]>(`${this.apiUrl}/users `)
       .pipe(
         catchError(this.handleError)
           //   return of([]);
